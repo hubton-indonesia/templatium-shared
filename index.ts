@@ -1,5 +1,6 @@
 const BASE_API_URL = "https://templatium-cms.secure-staging.com/api"
-const PRODUCTS_URL = `${BASE_API_URL}/products`
+const PRODUCTS_URL = `${BASE_API_URL}/ecommerce/products`
+const PRODUCT_CATEGORIES_URL = `${BASE_API_URL}/ecommerce/categories`
 const CLIENT_URL = `${BASE_API_URL}/client`
 
 let apiKey: string | null = null
@@ -33,7 +34,13 @@ export const templatiumSdk = {
     },
     product: {
       get() {
+        console.log({PRODUCTS_URL})
         return apiGet(PRODUCTS_URL)
+      },
+    },
+    productCategory: {
+      get() {
+        return apiGet(PRODUCT_CATEGORIES_URL)
       },
     },
   },

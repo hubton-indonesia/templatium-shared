@@ -1,17 +1,61 @@
-export interface ProductData {
-  id: number;
-  title: string;
-  price: string;
-  rawPrice: number;
-  originalPrice: string | null;
-  isSale: boolean;
-  thumbnail: string;
-  category: string;
-  colors?: string[];
-  images: string[];
-  description: string;
-  brand: string;
-  rating: number;
-  stock: number;
-  discountPercentage: number;
+export interface ProductCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
 }
+
+export interface ProductData {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  status: string;
+  image_url: string;
+  gallery_urls: string[];
+  has_variants: boolean;
+  price_range: {
+    min: number;
+    max: number;
+    original_min: number;
+    original_max: number;
+  };
+  total_stock: number;
+  enable_paypal: boolean;
+  usd_rate: number;
+  categories: Array<{
+    id: string;
+    name: string;
+    slug: string;
+  }>;
+  variants: Array<{
+    id: string;
+    sku: string | null;
+    gtin: string | null;
+    price: number;
+    price_usd: number;
+    discount_price: number;
+    discount_price_usd: number;
+    currency_rate: number;
+    stock: number;
+    image: string;
+    combination: string | null;
+    is_default: boolean;
+  }>;
+  created_at: string;
+}
+
+export declare const templatiumSdk: {
+  init(key: string): void;
+  ecommerce: {
+    client: {
+      get(): Promise<any>;
+    };
+    product: {
+      get(): Promise<any>;
+    };
+    productCategory: {
+      get(): Promise<any>;
+    };
+  };
+};
