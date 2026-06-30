@@ -1,4 +1,4 @@
-const BASE_API_URL = process.env.BASE_API_URL
+const BASE_API_URL = "https://templatium-cms.secure-staging.com/api"
 const PRODUCTS_URL = `${BASE_API_URL}/products`
 const CLIENT_URL = `${BASE_API_URL}/client`
 
