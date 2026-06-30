@@ -8,4 +8,10 @@ export interface ProductData {
   thumbnail: string;
   category: string;
   colors?: string[];
+  images: string[];
+  description: string;
+  brand: string;
+  rating: number;
+  stock: number;
+  discountPercentage: number;
 }
