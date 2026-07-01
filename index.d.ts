@@ -3,6 +3,7 @@ export interface ProductCategory {
   name: string;
   slug: string;
   description: string | null;
+  image?: string | null;
 }
 
 export interface ProductData {
@@ -52,7 +53,7 @@ export declare const templatiumSdk: {
       get(): Promise<any>;
     };
     product: {
-      get(): Promise<any>;
+      get(id:string): Promise<any>;
     };
     productCategory: {
       get(): Promise<any>;

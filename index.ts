@@ -33,9 +33,9 @@ export const templatiumSdk = {
       },
     },
     product: {
-      get() {
-        console.log({PRODUCTS_URL})
-        return apiGet(PRODUCTS_URL)
+      get(id?: string) {
+        console.log(id ? `${PRODUCTS_URL}/${id}` : PRODUCTS_URL)
+        return apiGet(id ? `${PRODUCTS_URL}/${id}` : PRODUCTS_URL)
       },
     },
     productCategory: {
