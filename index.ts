@@ -1,3 +1,5 @@
+export { formatIDR, formatUSD } from "./format-currency.js"
+
 const BASE_API_URL = "https://templatium-cms.secure-staging.com/api"
 const PRODUCTS_URL = `${BASE_API_URL}/ecommerce/products`
 const PRODUCT_CATEGORIES_URL = `${BASE_API_URL}/ecommerce/categories`

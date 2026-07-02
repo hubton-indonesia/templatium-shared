@@ -1,3 +1,6 @@
+export function formatIDR(value: number, multiplier?: number): string;
+export function formatUSD(value: number, multiplier?: number): string;
+
 export interface ProductCategory {
   id: string;
   name: string;
