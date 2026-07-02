@@ -49,6 +49,31 @@ export interface ProductData {
   created_at: string;
 }
 
+export interface CartItem {
+  id: string;
+  product_variant_id: string;
+  product_name: string;
+  product_image: string;
+  variant_combination: string | null;
+  price: number;
+  price_usd: number;
+  quantity: number;
+  stock_available: number;
+}
+
+export interface CartData {
+  id: string;
+  session_id: string | null;
+  user_id: string | null;
+  items: CartItem[];
+  subtotal: number;
+  subtotal_usd: number;
+  currency: string;
+  exchange_rate: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export declare const templatiumSdk: {
   init(key: string): void;
   ecommerce: {
@@ -56,10 +81,17 @@ export declare const templatiumSdk: {
       get(): Promise<any>;
     };
     product: {
-      get(id:string): Promise<any>;
+      get(id?: string): Promise<any>;
     };
     productCategory: {
       get(): Promise<any>;
+    };
+    cart: {
+      createOrRetrieve(body: { session_id?: string | null; user_id?: string | null }): Promise<any>;
+      get(cartId: string): Promise<any>;
+      addItem(cartId: string, body: { product_variant_id: string; quantity?: number | null }): Promise<any>;
+      updateItem(cartId: string, itemId: string, body: { quantity: number }): Promise<any>;
+      removeItem(cartId: string, itemId: string): Promise<any>;
     };
   };
 };
