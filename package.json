@@ -5,10 +5,10 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./index.js"
+      "import": "./index.ts"
     }
   },
-  "main": "./index.js",
+  "main": "./index.ts",
   "types": "./index.d.ts",
   "scripts": {
     "test": "bun run test.ts"
