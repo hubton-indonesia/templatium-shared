@@ -47,7 +47,8 @@ export function withAuth<T>(token: string | null | undefined, fn: (token: string
 let apiKey: string | null = null
 
 async function apiFetch(url: string, method: string = "GET", body?: unknown, token?: string | null, opts?: { customerToken?: string }) {
-  if (!apiKey && !extraHeaders['X-Checkout-API-Key']) {
+  const isVisitorMode = !!extraHeaders['X-Client-Slug']
+  if (!apiKey && !extraHeaders['X-Checkout-API-Key'] && !isVisitorMode) {
     throw new Error('SDK not initialized. Call templatiumSdk.init(key) first.')
   }
 
@@ -56,6 +57,8 @@ async function apiFetch(url: string, method: string = "GET", body?: unknown, tok
   }
 
   if (extraHeaders['X-Checkout-API-Key']) {
+    Object.assign(headers, extraHeaders)
+  } else if (isVisitorMode) {
     Object.assign(headers, extraHeaders)
   } else {
     if (!apiKey) throw new Error('SDK not initialized. Call templatiumSdk.init(key) first.')
@@ -127,6 +130,9 @@ export const templatiumSdk = {
     },
   },
   ecommerce: {
+    visit: {
+      log() { return apiFetch(p('/ecommerce/visit'), "POST", {}) },
+    },
     client: {
       get() { return apiFetch(p('/ecommerce/client')) },
     },

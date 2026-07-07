@@ -41,6 +41,7 @@ export interface ProductData {
     original_max: number;
   };
   total_stock: number;
+  sold_count: number;
   enable_paypal: boolean;
   usd_rate: number;
   categories: Array<{
@@ -289,6 +290,9 @@ export declare const templatiumSdk: {
     }): Promise<any>;
   };
   ecommerce: {
+    visit: {
+      log(): Promise<any>;
+    };
     client: {
       get(): Promise<any>;
     };
