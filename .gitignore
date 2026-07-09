@@ -1,3 +1,4 @@
 node_modules
 .env
 templatium-cms-api*.json
+api.json
