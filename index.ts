@@ -187,7 +187,7 @@ export const templatiumSdk = {
         get(cityId: string) { return apiFetch(`${p('/ecommerce/shipping/districts')}?city_id=${cityId}`) },
       },
       subdistricts: {
-        get(districtId: string) { return apiFetch(`${p('/ecommerce/shipping/subdistricts')}?subdistrict_id=${districtId}`) },
+        get(districtId: string) { return apiFetch(`${p('/ecommerce/shipping/subdistricts')}?district_id=${districtId}`) },
       },
       cost: {
         calculate(body: {
