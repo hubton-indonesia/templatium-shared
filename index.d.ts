@@ -379,6 +379,7 @@ export declare const templatiumSdk: {
         currency?: string | null;
       }, customerToken?: string): Promise<any>;
       get(idOrNumber: string): Promise<any>;
+      capturePaypal(orderId: string, body: { paypal_order_id: string }): Promise<any>;
     };
   };
 };

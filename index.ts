@@ -80,7 +80,8 @@ async function apiFetch(url: string, method: string = "GET", body?: unknown, tok
   })
 
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`)
+    const body = await res.json().catch(() => ({}))
+    throw new Error((body as any)?.message || `API error: ${res.status} ${res.statusText}`)
   }
 
   return res.json()
@@ -240,6 +241,9 @@ export const templatiumSdk = {
       },
       get(idOrNumber: string) {
         return apiFetch(`${p('/ecommerce/orders')}/${idOrNumber}`)
+      },
+      capturePaypal(orderId: string, body: { paypal_order_id: string }) {
+        return apiFetch(`${p('/ecommerce/orders')}/${orderId}/paypal/capture`, "POST", body)
       },
     },
   },
