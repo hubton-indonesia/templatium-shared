@@ -21,7 +21,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function handleCall<T>(fn: () => Promise<unknown>): Promise<{data: T; metadata: unknown[]}> {
+export async function handleCall<T>(fn: () => Promise<unknown>): Promise<{data: T; metadata: unknown[]; pagination?: PaginationMeta}> {
   const res = await fn()
   if ((res as any).status !== 'success') {
     throw new ApiError(
@@ -33,9 +33,18 @@ export async function handleCall<T>(fn: () => Promise<unknown>): Promise<{data: 
   const data = (res as any).data
   const metadata: unknown[] = (res as any).metadata ?? []
   if (data && typeof data === 'object' && 'items' in data && Array.isArray(data.items)) {
-    return { data: data.items as T, metadata }
+    const { items, total, per_page, current_page, last_page } = data
+    const pagination = total !== undefined ? { total, per_page, current_page, last_page } : undefined
+    return { data: items as T, metadata, pagination }
   }
   return { data: data as T, metadata }
+}
+
+interface PaginationMeta {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
 }
 
 export function requireAuth(token?: string | null): string {

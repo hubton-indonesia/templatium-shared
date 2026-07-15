@@ -3,9 +3,30 @@ export class ApiError extends Error {
   data: unknown;
 }
 
+interface ApiResponse<T> {
+  status: string;
+  message?: string;
+  data: T;
+}
+
+interface PaginatedData<T> {
+  items: T[];
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+}
+
+interface PaginationMeta {
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+}
+
 export function handleCall<T>(
   fn: () => Promise<unknown>
-): Promise<{data: T; metadata: unknown[]}>;
+): Promise<{data: T; metadata: unknown[]; pagination?: PaginationMeta}>;
 
 export function requireAuth(token?: string | null): string;
 
@@ -263,23 +284,23 @@ export declare const templatiumSdk: {
   setExtraHeaders(headers: Record<string, string>): void;
   setEnvironment(env: "staging" | "live"): void;
   blog: {
-    get(slug?: string): Promise<any>;
+    get(slug?: string): Promise<ApiResponse<BlogPost[]>>;
   };
   category: {
-    get(slug?: string): Promise<any>;
+    get(slug?: string): Promise<ApiResponse<PostCategory[]>>;
   };
   contact: {
     submit(body: {
       name: string;
       message: string;
       extra_data?: string[] | null;
-    }): Promise<any>;
+    }): Promise<ApiResponse<unknown>>;
   };
   teamMember: {
-    get(): Promise<any>;
+    get(): Promise<ApiResponse<TeamMember[]>>;
   };
   testimonial: {
-    get(): Promise<any>;
+    get(): Promise<ApiResponse<Testimonial[]>>;
   };
   subscription: {
     register(body: {
@@ -290,71 +311,72 @@ export declare const templatiumSdk: {
       password: string;
       client_slug?: string | null;
       customer_phone?: string | null;
-    }): Promise<any>;
+    }): Promise<ApiResponse<SubscriptionResponseData>>;
   };
   ecommerce: {
     visit: {
-      log(): Promise<any>;
+      log(): Promise<ApiResponse<unknown>>;
     };
     client: {
-      get(): Promise<any>;
+      get(): Promise<ApiResponse<ClientData>>;
     };
     currency: {
-      detect(): Promise<any>;
+      detect(): Promise<ApiResponse<CurrencyDetectData>>;
     };
     auth: {
-      sendOtp(body: { email: string }): Promise<any>;
+      sendOtp(body: { email: string }): Promise<ApiResponse<unknown>>;
       verifyOtp(body: {
         email: string;
         otp?: string | null;
         name?: string | null;
         phone?: string | null;
-      }): Promise<any>;
+      }): Promise<ApiResponse<AuthVerifyResponseData>>;
     };
     customer: {
       profile: {
-        get(token: string): Promise<any>;
-        update(body: { name?: string | null; phone?: string | null }, token: string): Promise<any>;
+        get(token: string): Promise<ApiResponse<CustomerProfileData>>;
+        update(body: { name?: string | null; phone?: string | null }, token: string): Promise<ApiResponse<CustomerProfileData>>;
       };
       orders: {
-        get(token: string): Promise<any>;
+        get(token: string): Promise<ApiResponse<unknown>>;
       };
     };
     product: {
-      get(id?: string): Promise<any>;
+      get(): Promise<ApiResponse<PaginatedData<ProductData>>>;
+      get(id: string): Promise<ApiResponse<ProductData>>;
     };
     productCategory: {
-      get(): Promise<any>;
+      get(): Promise<ApiResponse<ProductCategory[]>>;
     };
     productCollection: {
-      get(slug?: string): Promise<any>;
+      get(slug?: string): Promise<ApiResponse<PaginatedData<ProductCollection>>>;
     };
     shipping: {
       provinces: {
-        get(): Promise<any>;
+        get(): Promise<ApiResponse<ShippingProvince[]>>;
       };
       cities: {
-        get(provinceId: string): Promise<any>;
+        get(provinceId: string): Promise<ApiResponse<ShippingCity[]>>;
       };
       districts: {
-        get(cityId: string): Promise<any>;
+        get(cityId: string): Promise<ApiResponse<ShippingDistrict[]>>;
       };
       subdistricts: {
-        get(districtId: string): Promise<any>;
+        get(districtId: string): Promise<ApiResponse<ShippingSubdistrict[]>>;
       };
       cost: {
         calculate(body: {
           destination_district_id: string;
           weight: number;
-        }): Promise<any>;
+        }): Promise<ApiResponse<unknown>>;
       };
     };
     cart: {
-      createOrRetrieve(body: { session_id?: string | null; user_id?: string | null }): Promise<any>;
-      get(cartId: string): Promise<any>;
-      addItem(cartId: string, body: { product_variant_id: string; quantity?: number | null }): Promise<any>;
-      updateItem(cartId: string, itemId: string, body: { quantity: number }): Promise<any>;
-      removeItem(cartId: string, itemId: string): Promise<any>;
+      createOrRetrieve(body: { session_id?: string | null; user_id?: string | null }): Promise<ApiResponse<CartData>>;
+      get(cartId: string): Promise<ApiResponse<CartData>>;
+      addItem(cartId: string, body: { product_variant_id: string; quantity?: number | null }): Promise<ApiResponse<CartData>>;
+      updateItem(cartId: string, itemId: string, body: { quantity: number }): Promise<ApiResponse<CartData>>;
+      removeItem(cartId: string, itemId: string): Promise<ApiResponse<CartData>>;
     };
     order: {
       store(body: {
@@ -378,9 +400,9 @@ export declare const templatiumSdk: {
         shipping_subdistrict_name?: string | null;
         postal_code?: string | null;
         currency?: string | null;
-      }, customerToken?: string): Promise<any>;
-      get(idOrNumber: string): Promise<any>;
-      capturePaypal(orderId: string, body: { paypal_order_id: string }): Promise<any>;
+      }, customerToken?: string): Promise<ApiResponse<OrderData>>;
+      get(idOrNumber: string): Promise<ApiResponse<OrderData>>;
+      capturePaypal(orderId: string, body: { paypal_order_id: string }): Promise<ApiResponse<unknown>>;
     };
   };
 };
