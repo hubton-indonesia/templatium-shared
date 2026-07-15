@@ -1,6 +1,9 @@
 export { formatIDR, formatUSD } from "./format-currency.js"
 
-const DEFAULT_API_URL = "https://templatium-cms.secure-staging.com/api"
+const STAGING_API_URL = "https://templatium-cms.secure-staging.com/api"
+const LIVE_API_URL = "https://cms.templatium.com/api"
+
+const DEFAULT_API_URL = typeof process !== 'undefined' && process.env?.BASE_API_URL || STAGING_API_URL
 let apiUrl: string = DEFAULT_API_URL
 
 function p(path: string) { return `${apiUrl}${path}` }
@@ -91,6 +94,9 @@ export const templatiumSdk = {
   init(key: string) { apiKey = key },
   setBaseUrl(url: string) { apiUrl = url },
   setExtraHeaders(headers: Record<string, string>) { extraHeaders = headers },
+  setEnvironment(env: "staging" | "live") {
+    apiUrl = env === "live" ? LIVE_API_URL : STAGING_API_URL
+  },
 
   blog: {
     get(slug?: string) {

@@ -261,6 +261,7 @@ export declare const templatiumSdk: {
   init(key: string): void;
   setBaseUrl(url: string): void;
   setExtraHeaders(headers: Record<string, string>): void;
+  setEnvironment(env: "staging" | "live"): void;
   blog: {
     get(slug?: string): Promise<any>;
   };
