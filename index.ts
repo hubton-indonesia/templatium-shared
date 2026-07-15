@@ -3,7 +3,14 @@ export { formatIDR, formatUSD } from "./format-currency.js"
 const STAGING_API_URL = "https://templatium-cms.secure-staging.com/api"
 const LIVE_API_URL = "https://cms.templatium.com/api"
 
-const DEFAULT_API_URL = typeof process !== 'undefined' && process.env?.BASE_API_URL || STAGING_API_URL
+// Resolve the API base URL dynamically from the environment (mirrors how the
+// cekarc template injects BASE_API_URL). Supports Node (process.env) and
+// Vite/Astro bundled contexts (import.meta.env). Falls back to staging.
+const ENV_BASE_API_URL =
+  (typeof process !== 'undefined' && process.env?.BASE_API_URL) ||
+  (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_API_URL) ||
+  null
+const DEFAULT_API_URL = ENV_BASE_API_URL || STAGING_API_URL
 let apiUrl: string = DEFAULT_API_URL
 
 function p(path: string) { return `${apiUrl}${path}` }
