@@ -7,6 +7,9 @@ cd "$DIR"
 # === USAGE ===
 # Human:  ./release.sh 0.0.1
 # AI:     ./release.sh --commit 0.0.1   (stages all, commits, then releases)
+#
+# Both forms require the repo to be on the `main` branch with a clean tree,
+# unless --commit is passed (which auto-stages + commits first).
 
 AUTO_COMMIT=false
 
@@ -72,6 +75,16 @@ fi
 if [ -n "$(git status --porcelain)" ]; then
     echo "Working tree is not clean. Use --commit flag or commit manually."
     exit 1
+fi
+
+# === Optional guard: index.ts exports must match src/components count (ui only) ===
+if [ -d "$DIR/src/components" ]; then
+    EXPORT_COUNT=$(grep -c 'from "./src/components/' "$DIR/index.ts" 2>/dev/null || true)
+    COMPONENT_COUNT=$(find "$DIR/src/components" -type f \( -name '*.tsx' -o -name '*.astro' \) -not -path '*/ui/*' | wc -l | tr -d ' ')
+    if [ "$EXPORT_COUNT" -ne "$COMPONENT_COUNT" ]; then
+        echo "Error: index.ts has $EXPORT_COUNT export(s) but src/components/ has $COMPONENT_COUNT file(s)"
+        exit 1
+    fi
 fi
 
 # === Publish ===
